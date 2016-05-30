@@ -28,6 +28,8 @@ public class TestController {
 				throw new IllegalArgumentException();
 			}
 			dto.setData("");
+			
+			System.out.println("..........");
 			return  dto;
 		}catch (Exception e){
 			log.error(e.getMessage(),e);
