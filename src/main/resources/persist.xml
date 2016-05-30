@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" 
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/context
+          http://www.springframework.org/schema/context/spring-context-3.0.xsd
+          http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+          http://www.springframework.org/schema/aop
+          http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+          http://www.springframework.org/schema/mvc
+          http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+          
+	<bean id="dataSource" class="com.jolbox.bonecp.BoneCPDataSource"  
+        destroy-method="close">  
+        <!-- 数据库驱动 -->  
+        <property name="driverClass" value="com.mysql.jdbc.Driver" />  
+        <!-- 相应驱动的jdbcUrl,你懂的 -->  
+        <property name="jdbcUrl" value="${db.ipcpush.url}" />  
+        <!-- 数据库的用户名 -->  
+        <property name="username" value="${db.ipcpush.username}" />  
+        <!-- 数据库的密码 -->  
+        <property name="password" value="${db.ipcpush.password}" />  
+         <!-- 每个分区最大的连接数 -->  
+        <property name="maxConnectionsPerPartition" value="100" />  
+        <!-- 每个分区最小的连接数 -->  
+        <property name="minConnectionsPerPartition" value="2" />  
+        <!-- 分区数 ，默认值2，最小1，推荐3-4，视应用而定-->  
+        <property name="partitionCount" value="3" />  
+        <!-- 检查数据库连接池中空闲连接的间隔时间，单位是分，默认值：240，如果要取消则设置为0 -->  
+        <property name="idleConnectionTestPeriod" value="30" />  
+        <!-- 连接池中未使用的链接最大存活时间，单位是分，默认值：60，如果要永远存活设置为0 -->  
+        <property name="idleMaxAge" value="30" />  
+        <!-- 每次去拿数据库连接的时候一次性要拿几个,默认值：2 -->  
+        <property name="acquireIncrement" value="2" />  
+        <!-- 缓存prepared statements的大小，默认值：0 -->  
+        <property name="statementsCacheSize" value="100" />  
+        <!-- 每个分区释放链接助理进程的数量，默认值：3，除非你的一个数据库连接的时间内做了很多工作，不然过多的助理进程会影响你的性能 -->  
+        <property name="releaseHelperThreads" value="3" />
+        <!-- 如果设置为true，那么连接池不会自动创建最小连接数的链接，而是保持为空，直到有需求要获取连接 -->
+        <property name="lazyInit" value="true" />
+        <!-- 如果设置为true，则会增加一个线程监控关闭连接时的情况，如果关闭时出现异常，则打出错误日志，主要用于debug。上线后记得关掉 -->
+        <property name="closeConnectionWatch" value="false" />
+        <!-- 获取连接的时候最大的等待时间（单位：毫秒），默认值为：Long.MAX_VALUE -->
+        <property name="connectionTimeoutInMs" value="15000" />
+        <!-- 查询执行的超时时间，单位毫秒 -->
+        <property name="queryExecuteTimeLimitInMs" value="90000" />
+    </bean> 
+	
+	<bean id="pushDB" class="org.foscam.persist.DbTool">
+		<property name="dataSource" ref="dataSource">
+			
+			<!-- <bean class="com.alibaba.druid.pool.DruidDataSource"
+				init-method="init" destroy-method="close">
+				<property name="url" value="${db.ipcpush.url}" />
+				<property name="username" value="${db.ipcpush.username}" />
+				<property name="password" value="${db.ipcpush.password}" />
+				<property name="initialSize" value="2" />
+				<property name="maxActive" value="200" />
+				<property name="maxIdle" value="200" />
+				<property name="minIdle" value="1" />
+				<property name="maxWait" value="60000" />
+				<property name="validationQuery" value="SELECT 1" />
+				<property name="testOnBorrow" value="false" />
+				<property name="testOnReturn" value="false" />
+				<property name="testWhileIdle" value="true" />
+				<property name="timeBetweenEvictionRunsMillis" value="60000" />
+				<property name="minEvictableIdleTimeMillis" value="25200000" />
+				<property name="removeAbandoned" value="true" />
+				通过datasource.getConnontion() 取得的连接必须在removeAbandonedTimeout这么多秒内调用close(),要不我就弄死你.
+				<property name="removeAbandonedTimeout" value="1800" />
+				<property name="logAbandoned" value="true" />
+				<-property name="filters" value="stat" />
+				<-property name="filters" value="mergeStat" />
+			</bean>  -->
+			
+		</property>
+		
+	</bean>
+	
+</beans>
